@@ -33,5 +33,4 @@ class ListPosts(APIView):
 
     def get(self, request):
         posts = models.Post.objects.all()
-        s = [serializers.PostSerializer(p).data for p in posts]
         return Response({"object_list": posts})
