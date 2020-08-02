@@ -11,6 +11,9 @@ class Post(models.Model):
     amount_of_upvotes = models.IntegerField(default=0)
     author_name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.title
+
 
 class Comment(models.Model):
     content = models.TextField()
@@ -19,5 +22,5 @@ class Comment(models.Model):
     amount_of_upvotes = models.IntegerField(default=0)
     author_name = models.CharField(max_length=50)
 
-
-
+    def __str__(self):
+        return self.content

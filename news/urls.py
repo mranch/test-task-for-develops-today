@@ -1,8 +1,9 @@
 from django.urls import path, include
-from news import views
+# from news import views
+from news.views import PostListView, ListPosts
 from .router import router
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', ListPosts.as_view(), name='post-list'),
     path('api/', include(router.urls))
 ]
