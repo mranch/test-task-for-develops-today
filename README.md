@@ -1,1 +1,1 @@
-# test-task-for-develops-today
+# news_aggregator (test task for DevelopsToday)
