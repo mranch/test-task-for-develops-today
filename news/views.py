@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from django.shortcuts import render, HttpResponse
-from django.views.generic import ListView
+from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from rest_framework.decorators import api_view
 from . import models, serializers
 from rest_framework import viewsets
@@ -11,26 +11,41 @@ from rest_framework.renderers import TemplateHTMLRenderer
 
 
 # Create your views here.
-@api_view(["GET"])
-def home(request):
-    posts = models.Post.objects.all()
-    serializer = serializers.PostSerializer(posts, many=True)
-    return JsonResponse({"posts": serializer.data}, status=status.HTTP_200_OK)
-
-
 class PostListView(ListView):
     model = models.Post
 
 
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = models.Post.objects.all()
-    serializer_class = serializers.PostSerializer
+class PostDetailView(DetailView):
+    model = models.Post
 
 
-class ListPosts(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'news/post_list.html'
+class PostCreateView(CreateView):
+    model = models.Post
+    fields = ['title', 'link']
 
-    def get(self, request):
-        posts = models.Post.objects.all()
-        return Response({"object_list": posts})
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostCommentListView(ListView):
+    model = models.Comment
+    template_name = 'news/post_comments.html'
+
+    def get_queryset(self):
+        post = get_object_or_404(models.Post, id=self.kwargs.get('pk'))
+        return models.Comment.objects.filter(post_id=post)
+
+
+class CommentCreateView(CreateView):
+    model = models.Comment
+    fields = ['content']
+
+    def form_valid(self, form):
+        form.instance.post_id = models.Post.objects.get(id=self.request.pk)
+        return super().form_valid(form)
+
+
+class PostDeleteView(DeleteView):
+    model = models.Post
+    success_url = '/'

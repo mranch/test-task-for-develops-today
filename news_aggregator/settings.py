@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'news.apps.NewsConfig',
     'rest_framework',
     'django.contrib.admin',
