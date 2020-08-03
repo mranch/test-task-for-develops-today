@@ -1,0 +1,20 @@
+{% extends 'news/base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <h2>Comments</h2>
+    <a href="{% url 'comment-create' 1%}">Submit a new comment</a>
+    {% for object in object_list %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ object.author_name }}</a>
+              <small class="text-muted">{{ object.creation_date|date:"F d, Y H:i" }}</small>
+              <small class="text-muted ml-4">({{ object.amount_of_upvotes }} upvotes)</small>
+              <small class="text-muted ml-4"><a href="{% url 'post-comments' object.id %}">View comments</a></small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' object.id %}">{{ object.title }}</a></h2>
+              <p class="article-content"><a href="#">{{ object.content }}</a></p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock %}
